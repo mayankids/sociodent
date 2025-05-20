@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sociodent</title>
+    <style>
+        :root {
+            --primary: #1a1a1a;
+            --secondary: #2d2d2d;
+            --accent: #43a047;
+            --text-primary: #f5f5f5;
+            --text-secondary: #b3b3b3;
+            --card-bg: #252525;
+            --hover-bg: #333333;
+            --border: #3d3d3d;
+        }
+
+        body {
+            background-color: var(--primary);
+            color: var(--text-primary);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: var(--secondary);
+            height: 100vh;
+            position: fixed;
+            padding: 20px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .sidebar-header {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 15px;
+        }
+
+        .sidebar-menu a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-menu a:hover {
+            background-color: var(--hover-bg);
+            color: var(--accent);
+        }
+
+        .sidebar-menu a i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            margin-left: 250px;
+            padding: 30px;
+            width: calc(100% - 250px);
+        }
+
+        .feed-header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 2rem;
+        }
+
+        .feed-content {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--secondary);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Algorithm Cards Grid */
+        .algorithm-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .algorithm-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+        }
+
+        .algorithm-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            border-color: var(--accent);
+        }
+
+        .algorithm-card h3 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+
+        .algorithm-card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .algorithm-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--accent);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .algorithm-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="sidebar-header">Sociodent</div>
+        <ul class="sidebar-menu">
+            <li><a href="#"><i class="fas fa-home"></i> Feed</a></li>
+            <li><a href="#"><i class="fas fa-envelope"></i> Messages</a></li>
+            <li><a href="#"><i class="fas fa-users"></i> Join Community</a></li>
+            <li><a href="index.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <h1 class="feed-header">Algorithm Visualizations</h1>
+
+        <div class="feed-content">
+            <div class="algorithm-grid">
+                <!-- Tower of Hanoi Card -->
+                <div class="algorithm-card">
+                    <a href="toh.html" style="color: inherit; text-decoration: none; display: block;">
+                        <div class="algorithm-icon">
+                            <i class="fas fa-layer-group"></i>
+                        </div>
+                        <h3>Tower of Hanoi</h3>
+                        <p>Interactive visualization of the classic recursion problem</p>
+                    </a>
+                </div>
+
+                <!-- AVL Tree Card -->
+                <div class="algorithm-card">
+                    <a href="avl.html" style="color: inherit; text-decoration: none; display: block;">
+                        <div class="algorithm-icon">
+                            <i class="fas fa-project-diagram"></i>
+                        </div>
+                        <h3>AVL Tree</h3>
+                        <p>Visualize self-balancing binary search tree operations</p>
+                    </a>
+                </div>
+
+                <!-- Sorting Algorithms Card -->
+                <div class="algorithm-card">
+                    <a href="sorting.html" style="color: inherit; text-decoration: none; display: block;">
+                        <div class="algorithm-icon">
+                            <i class="fas fa-sort-amount-down"></i>
+                        </div>
+                        <h3>Sorting Algorithms</h3>
+                        <p>Compare different sorting algorithms with visualizations</p>
+                    </a>
+                </div>
+
+                <!-- Graph Algorithms Card -->
+                <div class="algorithm-card">
+                    <a href="graph.html" style="color: inherit; text-decoration: none; display: block;">
+                        <div class="algorithm-icon">
+                            <i class="fas fa-network-wired"></i>
+                        </div>
+                        <h3>Graph Algorithms</h3>
+                        <p>Visualize Dijkstra's, BFS, DFS and more</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

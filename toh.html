@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tower of Hanoi Visualization</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .canvas-container {
+      text-align: center;
+      margin-top: 30px;
+    }
+    canvas {
+      background: #f4f4f4;
+      border: 1px solid #ccc;
+    }
+    input, button {
+      margin: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="canvas-container">
+    
+    <h1>Tower of Hanoi Visualization</h1>
+    
+    <input type="number" id="disks" placeholder="Enter number of disks" min="1" max="6">
+    <button onclick="startTOH()">Start</button>
+    <canvas id="tohCanvas" width="800" height="300"></canvas>
+    <div id="stepsContainer" class="steps-card"></div>
+
+  </div>
+  <script src="toh.js"></script>
+  <div id="stepsContainer" style="max-height: 200px; overflow-y: auto; text-align: center; color: #fff; background-color: #222; padding: 10px; margin-top: 20px; width: 100%;"></div>
+
+</body>
+</html>

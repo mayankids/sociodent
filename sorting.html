@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sorting Algorithms Visualization</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .sort-container {
+      text-align: center;
+      margin: 20px;
+    }
+    .bar-container {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      height: 300px;
+      gap: 4px;
+    }
+    .bar {
+      width: 20px;
+      background-color: #4caf50;
+    }
+    select, button {
+      margin: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="sort-container">
+    <h1>Sorting Algorithms Visualization</h1>
+    <select id="algo">
+      <option value="bubble">Bubble Sort</option>
+      <option value="selection">Selection Sort</option>
+      <option value="insertion">Insertion Sort</option>
+    </select>
+    <button onclick="generateBars()">Generate Array</button>
+    <button onclick="startSort()">Start Sorting</button>
+    <div class="bar-container" id="barContainer"></div>
+  </div>
+  <script src="sorting.js"></script>
+</body>
+</html>

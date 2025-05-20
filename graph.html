@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Graph Algorithms Visualization</title>
+  <style>
+    body {
+      background-color: #1a1a1a;
+      color: #43a047;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    #graph-container {
+      position: relative;
+      width: 600px;
+      height: 400px;
+      background: #252525;
+      border-radius: 10px;
+      margin-top: 20px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    }
+
+    /* Nodes styled as circles */
+    .node {
+      position: absolute;
+      background-color: #252525;
+      border: 2px solid #43a047;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      color: #f5f5f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+
+    .node.visited {
+      background-color: #43a047;
+      color: #1a1a1a;
+    }
+
+    svg {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none; /* so clicks pass through */
+    }
+
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      background-color: #43a047;
+      border: none;
+      border-radius: 5px;
+      color: #1a1a1a;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #357a38;
+    }
+
+    .edges-legend {
+      width: 600px;
+      color: #b3b3b3;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Visualize Dijkstra's, BFS, DFS</h1>
+  <p>Select an algorithm and watch the traversal on the graph nodes below.</p>
+
+  <div>
+    <button id="bfsBtn">Run BFS</button>
+    <button id="dfsBtn">Run DFS</button>
+    <button id="dijkstraBtn">Run Dijkstra's</button>
+    <button id="resetBtn">Reset</button>
+  </div>
+
+  <div id="graph-container">
+    <!-- Nodes will be added by JS -->
+    <svg id="edges-svg"></svg>
+  </div>
+
+  <div class="edges-legend">
+    <h3>Graph edges with weights:</h3>
+    <ul>
+      <li>A - B (4)</li>
+      <li>A - C (2)</li>
+      <li>B - C (5)</li>
+      <li>B - D (10)</li>
+      <li>C - E (3)</li>
+      <li>E - D (4)</li>
+      <li>D - F (11)</li>
+    </ul>
+  </div>
+
+<script>
+  // Graph with nodes and adjacency list with weights
+  const graph = {
+    A: [{ node: 'B', weight: 4 }, { node: 'C', weight: 2 }],
+    B: [{ node: 'A', weight: 4 }, { node: 'C', weight: 5 }, { node: 'D', weight: 10 }],
+    C: [{ node: 'A', weight: 2 }, { node: 'B', weight: 5 }, { node: 'E', weight: 3 }],
+    D: [{ node: 'B', weight: 10 }, { node: 'E', weight: 4 }, { node: 'F', weight: 11 }],
+    E: [{ node: 'C', weight: 3 }, { node: 'D', weight: 4 }],
+    F: [{ node: 'D', weight: 11 }],
+  };
+
+  // Fixed positions to form a tree-like layout inside #graph-container (600x400)
+  const positions = {
+    A: { x: 270, y: 20 },
+    B: { x: 150, y: 120 },
+    C: { x: 390, y: 120 },
+    D: { x: 150, y: 280 },
+    E: { x: 390, y: 280 },
+    F: { x: 270, y: 350 },
+  };
+
+  const nodes = Object.keys(graph);
+  const container = document.getElementById('graph-container');
+  const svg = document.getElementById('edges-svg');
+
+  // Create node elements and position them
+  nodes.forEach(node => {
+    const div = document.createElement('div');
+    div.classList.add('node');
+    div.id = `node-${node}`;
+    div.textContent = node;
+    div.style.left = positions[node].x + 'px';
+    div.style.top = positions[node].y + 'px';
+    container.appendChild(div);
+  });
+
+  // Draw edges as SVG lines between nodes
+  function drawEdges() {
+    // Clear previous lines
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+    const radius = 25; // half node width/height, for centering lines at node centers
+
+    nodes.forEach(node => {
+      graph[node].forEach(({ node: neighbor, weight }) => {
+        // To avoid duplicate lines, only draw if node < neighbor alphabetically
+        if (node < neighbor) {
+          const x1 = positions[node].x + radius;
+          const y1 = positions[node].y + radius;
+          const x2 = positions[neighbor].x + radius;
+          const y2 = positions[neighbor].y + radius;
+
+          // Draw line
+          const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+          line.setAttribute("x1", x1);
+          line.setAttribute("y1", y1);
+          line.setAttribute("x2", x2);
+          line.setAttribute("y2", y2);
+          line.setAttribute("stroke", "#43a047");
+          line.setAttribute("stroke-width", "2");
+          svg.appendChild(line);
+
+          // Add weight text at midpoint of line
+          const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+          text.textContent = weight;
+          text.setAttribute("fill", "#b3b3b3");
+          text.setAttribute("font-size", "14");
+          text.setAttribute("font-family", "Segoe UI, Tahoma, Geneva, Verdana, sans-serif");
+          const midX = (x1 + x2) / 2;
+          const midY = (y1 + y2) / 2;
+          text.setAttribute("x", midX);
+          text.setAttribute("y", midY - 5);
+          text.setAttribute("text-anchor", "middle");
+          svg.appendChild(text);
+        }
+      });
+    });
+  }
+
+  drawEdges();
+
+  // Reset all nodes visited state
+  function resetNodes() {
+    nodes.forEach(n => {
+      document.getElementById(`node-${n}`).classList.remove('visited');
+    });
+  }
+
+  // BFS traversal with animation
+  function bfs(start = 'A') {
+    resetNodes();
+    let queue = [start];
+    let visited = new Set();
+
+    function visitNext() {
+      if (queue.length === 0) return;
+      const current = queue.shift();
+      visited.add(current);
+      document.getElementById(`node-${current}`).classList.add('visited');
+
+      setTimeout(() => {
+        graph[current].forEach(neighbor => {
+          if (!visited.has(neighbor.node) && !queue.includes(neighbor.node)) {
+            queue.push(neighbor.node);
+          }
+        });
+        visitNext();
+      }, 600);
+    }
+    visitNext();
+  }
+
+  // DFS traversal with animation
+  function dfs(start = 'A') {
+    resetNodes();
+    let stack = [start];
+    let visited = new Set();
+
+    function visitNext() {
+      if (stack.length === 0) return;
+      const current = stack.pop();
+      if (visited.has(current)) {
+        setTimeout(visitNext, 600);
+        return;
+      }
+      visited.add(current);
+      document.getElementById(`node-${current}`).classList.add('visited');
+
+      setTimeout(() => {
+        // Push neighbors in reverse order to get natural traversal order
+        const neighbors = graph[current].map(n => n.node).reverse();
+        neighbors.forEach(n => {
+          if (!visited.has(n)) {
+            stack.push(n);
+          }
+        });
+        visitNext();
+      }, 600);
+    }
+    visitNext();
+  }
+
+  // Dijkstra's algorithm with animation
+  function dijkstra(start = 'A') {
+    resetNodes();
+
+    const distances = {};
+    const visited = new Set();
+    const pq = new MinPriorityQueue();
+
+    nodes.forEach(n => distances[n] = Infinity);
+    distances[start] = 0;
+
+    pq.enqueue(start, 0);
+
+    function visitNext() {
+      if (pq.isEmpty()) return;
+
+      const { element: current } = pq.dequeue();
+      if (visited.has(current)) {
+        setTimeout(visitNext, 600);
+        return;
+      }
+
+      visited.add(current);
+      document.getElementById(`node-${current}`).classList.add('visited');
+
+      graph[current].forEach(({ node: neighbor, weight }) => {
+        if (!visited.has(neighbor)) {
+          const newDist = distances[current] + weight;
+          if (newDist < distances[neighbor]) {
+            distances[neighbor] = newDist;
+            pq.enqueue(neighbor, newDist);
+          }
+        }
+      });
+
+      setTimeout(visitNext, 600);
+    }
+
+    visitNext();
+  }
+
+  // MinPriorityQueue implementation for Dijkstra's
+  class MinPriorityQueue {
+    constructor() {
+      this.queue = [];
+    }
+    enqueue(element, priority) {
+      this.queue.push({ element, priority });
+      this.queue.sort((a, b) => a.priority - b.priority);
+    }
+    dequeue() {
+      return this.queue.shift();
+    }
+    isEmpty() {
+      return this.queue.length === 0;
+    }
+  }
+
+  // Button event listeners
+  document.getElementById('bfsBtn').addEventListener('click', () => bfs());
+  document.getElementById('dfsBtn').addEventListener('click', () => dfs());
+  document.getElementById('dijkstraBtn').addEventListener('click', () => dijkstra());
+  document.getElementById('resetBtn').addEventListener('click', () => resetNodes());
+</script>
+</body>
+</html>
